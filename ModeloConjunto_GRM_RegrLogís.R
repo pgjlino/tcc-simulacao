@@ -62,3 +62,5 @@ simula.conj <- function(dados.TRI, Y) {
                          sample=10000,modules="glm")
   return(saída.MCMC)
 }
+
+resultado <- simula.conj(X[,1:5],X[,6])
