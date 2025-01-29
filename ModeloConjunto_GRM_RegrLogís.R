@@ -1,4 +1,4 @@
-X <- read.csv("~/dados_amostra1000.csv", row.names=1)
+X <- read.csv("~/dados_ENADE_amostra1000.csv", row.names=1)
 
 #Modelo JAGS Estimação Conjunta
 Estimação.conjunta <-"
