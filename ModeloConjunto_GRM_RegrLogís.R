@@ -1,5 +1,6 @@
 X <- read.csv("~/dados_amostra1000.csv", row.names=1)
 
+#Modelo JAGS Estimação Conjunta
 Estimação.conjunta <-"
 model{
   for(i in 1:N){
