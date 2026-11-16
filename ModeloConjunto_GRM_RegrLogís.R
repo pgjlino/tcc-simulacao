@@ -1,4 +1,4 @@
-X <- read.csv("~/dados_ENADE_amostra1000.csv", row.names=1)
+X <- read.csv("~/dados_amostra955.csv", row.names=1)
 
 #Modelo JAGS Estimação Conjunta
 Estimação.conjunta <-"
@@ -25,26 +25,26 @@ beta_1 ~ dnorm(0.0,1E-3)
 }
 "
 
-
-simula.conj <- function(dados.TRI, Y) {
-
+  
+simula.conj <- function(d,Y) {
   Y <- as.numeric(Y)-1
   
-  d <- as.matrix(dados.TRI)
+  as.matrix(d)
   for (i in 1:ncol(d)) {
     d[,i] <- as.numeric(d[,i])
   }
-  c <- c(3,3,3,2,2)
+  c <- c(3,3,3,3,3,3)
   
   #Ajustando####
   
-  dados <- list(N = length(Y),c=c,J=ncol(d),X=as.matrix(d),y = Y)
+  dado <- list(N = length(Y),c=c,J=ncol(d),X=as.matrix(d),y = Y)
   
   bettas.inic <- matrix(c(0,1,
                           0,1,
                           0,1,
-                          0,NA,
-                          0,NA),
+                          0,1,
+                          0,1,
+                          0,1),
                         nrow=ncol(d), ncol=max(c)-1, byrow=T)
   
   inic.model =list(list(a=rep(1,ncol(d)), b=bettas.inic,beta_0=0, beta_1=0,
@@ -56,11 +56,11 @@ simula.conj <- function(dados.TRI, Y) {
   
   
   saída.MCMC <- run.jags(model=Estimação.conjunta, 
-                         monitor=c("beta_0", "beta_1","a","b","theta"),
-                         data=dados, n.chains=3, method="parallel", 
-                         inits=inic.model,adapt=1000, burnin=30000,
-                         sample=10000,modules="glm")
+                         monitor=c("beta_0", "beta_1","a","b","theta","y_rep"),
+                         data=dado, n.chains=3, method="parallel", 
+                         inits=inic.model,adapt=1000, burnin=3000, thin = 15,
+                         sample=1000,modules="glm")
   return(saída.MCMC)
 }
 
-resultado <- simula.conj(X[,1:5],X[,6])
+resultado <- simula.conj(dados[,1:6],dados[,7])
